@@ -1,0 +1,9 @@
+FROM ubuntu
+MAINTAINER tim
+RUN apt-get update
+RUN apt-get install -y wget lsb-release
+RUN wget http://dev.mysql.com/get/mysql-apt-config_0.8.1-1_all.deb
+RUN dpkg -i mysql-apt-config_0.8.1-1_all.deb
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+ENTRYPOINT bash

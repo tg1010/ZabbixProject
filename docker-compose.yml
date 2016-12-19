@@ -1,0 +1,16 @@
+version: '2'
+services:
+  data-only:
+    image: busybox
+    volumes:
+      - ./mysqlvolume:/var/lib/mysql
+  mysql-server:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
+    volumes_from:
+      - data-only
+    tty: true
+
+volumes:
+  data-only:
