@@ -1,4 +1,4 @@
 CREATE USER 'zabbix'@'localhost' IDENTIFIED BY 'zabbix';
-CREATE DATABASE zabbix;
+CREATE DATABASE zabbix character set utf8 collate utf8_bin;
 GRANT ALL PRIVILEGES ON zabbix.* to 'zabbix'@'localhost';
 FLUSH PRIVILEGES;
