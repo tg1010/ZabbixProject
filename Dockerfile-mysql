@@ -1,9 +1,25 @@
-FROM ubuntu
+FROM ubuntu:trusty
 MAINTAINER tim
-RUN apt-get update
-RUN apt-get install -y wget lsb-release
-RUN wget http://dev.mysql.com/get/mysql-apt-config_0.8.1-1_all.deb
-RUN dpkg -i mysql-apt-config_0.8.1-1_all.deb
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
-ENTRYPOINT bash
+
+
+RUN sed -i '2s/exit 101/exit 0/' /usr/sbin/policy-rc.d
+
+RUN apt-get update -y
+RUN apt-get install -y apache2
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server libapache2-mod-auth-mysql php5-mysql
+RUN apt-get install -y php5 libapache2-mod-php5 php5-mcrypt php5-mysql
+
+RUN chown -R mysql /var/lib/mysql
+RUN chgrp -R mysql /var/lib/mysql
+
+RUN mysql_install_db --user=mysql --basedir=/usr/ --ldata=/var/lib/mysql/
+
+RUN service apache2 restart
+RUN service mysql restart 
+
+COPY sysacc.sh /opt/sysacc.sh
+COPY info.php /var/www/html/info.php
+RUN chmod a+x /opt/sysacc.sh
+WORKDIR /opt
+
+ENTRYPOINT bash sysacc.sh && bash

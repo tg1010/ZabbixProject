@@ -1,0 +1,12 @@
+FROM ubuntu:trusty
+MAINTAINER tim
+
+RUN apt-get update -y
+RUN apt-get install -y wget
+WORKDIR /opt/
+RUN wget http://repo.zabbix.com/zabbix/3.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.0-1+trusty_all.deb
+RUN dpkg -i zabbix-release_3.0-1+trusty_all.deb
+RUN apt-get update -y
+
+
+RUN apt-get install -y zabbix-server

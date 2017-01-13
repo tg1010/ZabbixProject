@@ -4,13 +4,12 @@ services:
     image: busybox
     volumes:
       - ./mysqlvolume:/var/lib/mysql
-  mysql-server:
+  lamp-server:
     build:
       context: .
       dockerfile: Dockerfile-mysql
     volumes_from:
       - data-only
     tty: true
-
 volumes:
   data-only:

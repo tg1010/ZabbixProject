@@ -1,0 +1,47 @@
+FROM zabbixproject_lamp-server 
+MAINTAINER tim
+
+RUN apt-get update -y
+RUN apt-get install -y wget
+WORKDIR /opt/
+RUN wget http://repo.zabbix.com/zabbix/3.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.0-1+trusty_all.deb
+RUN dpkg -i zabbix-release_3.0-1+trusty_all.deb
+RUN apt-get update -y
+
+RUN apt-get install -y zabbix-server-mysql zabbix-frontend-php
+
+RUN sed -i -e 's/DBPassword=/DBPassword=zabbix/g' /etc/zabbix/zabbix_server.conf
+
+WORKDIR /usr/share/doc/zabbix-server-mysql/
+RUN gunzip create.sql.gz
+
+
+RUN service mysql start && mysqladmin -u root password 'root'
+COPY createZDB.txt /usr/share/doc/zabbix-server-mysql/createZDB.txt
+RUN service mysql start && (mysql --verbose -u root -proot < createZDB.txt)
+
+RUN service mysql start && mysql -u zabbix -pzabbix zabbix < create.sql
+
+WORKDIR /etc/php5/apache2/
+RUN sed -i -e 's/post_max_size =.*/post_max_size = 16M/g' php.ini
+RUN sed -i -e 's/max_input_time =.*/max_input_time = 300/g' php.ini
+RUN sed -i -e 's/max_execution_time =.*/max_execution_time = 300/g' php.ini
+RUN sed -i -e 's/;date.timezone =.*/date.timezone = \"Europe\/London\"/g' php.ini
+
+RUN cp /usr/share/zabbix/conf/zabbix.conf.php.example /etc/zabbix/zabbix.conf.php
+
+WORKDIR /etc/zabbix/
+RUN sed -i -e "s/\$DB\['PASSWORD'\].*/\$DB\['PASSWORD'\] =			'zabbix';/g" zabbix.conf.php
+
+EXPOSE 80
+EXPOSE 3306
+EXPOSE 10051
+
+RUN service apache2 stop
+RUN update-rc.d apache2 enable
+
+
+ENTRYPOINT bash
+
+
+

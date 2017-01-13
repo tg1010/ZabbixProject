@@ -1,0 +1,4 @@
+CREATE USER 'zabbix'@'localhost' IDENTIFIED BY 'zabbix';
+CREATE DATABASE zabbix;
+GRANT ALL PRIVILEGES ON zabbix.* to 'zabbix'@'localhost';
+FLUSH PRIVILEGES;
