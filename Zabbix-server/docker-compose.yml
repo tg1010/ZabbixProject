@@ -1,12 +1,19 @@
 version: '2'
 services:
+  zabbix-volume:
+    image: busybox
+    volumes:
+      - ../../zabbixvolume:/var/lib/mysql
   zabbix-server:
     build:
       context: .
       dockerfile: Dockerfile-zabbix
+    volumes_from:
+      - zabbix-volume
     ports:
       - "80:80"
       - "3306:3306"
       - "10051:10051"
     tty: true  
-
+volumes:
+  zabbix-volume:
