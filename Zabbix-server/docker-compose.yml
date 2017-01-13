@@ -3,7 +3,7 @@ services:
   zabbix-volume:
     image: busybox
     volumes:
-      - ../../zabbixvolume:/var/lib/mysql
+      - ./zabbixvolume:/var/lib/mysql
   zabbix-server:
     build:
       context: .

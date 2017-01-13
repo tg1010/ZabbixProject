@@ -3,7 +3,7 @@ services:
   data-only:
     image: busybox
     volumes:
-      - ../lampvolume:/var/lib/mysql
+      - ./lampvolume:/var/lib/mysql
   lamp-server:
     build:
       context: .
