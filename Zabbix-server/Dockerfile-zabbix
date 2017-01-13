@@ -33,15 +33,13 @@ RUN cp /usr/share/zabbix/conf/zabbix.conf.php.example /etc/zabbix/zabbix.conf.ph
 WORKDIR /etc/zabbix/
 RUN sed -i -e "s/\$DB\['PASSWORD'\].*/\$DB\['PASSWORD'\] =			'zabbix';/g" zabbix.conf.php
 
-EXPOSE 80
+#EXPOSE 80
 EXPOSE 3306
 EXPOSE 10051
 
-RUN service apache2 stop
-RUN update-rc.d apache2 enable
 
 
-ENTRYPOINT bash
+ENTRYPOINT service apache2 start && service mysql start && service zabbix-server start && bash
 
 
 
