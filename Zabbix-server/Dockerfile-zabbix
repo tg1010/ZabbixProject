@@ -37,13 +37,14 @@ RUN sed -i -e "s/\# DBPassword=zabbix/DBPassword=zabbix/g" zabbix_server.conf
 EXPOSE 80
 EXPOSE 3306
 EXPOSE 10051
+EXPOSE 10050
 
 RUN sudo apt-get update -y
 RUN sudo apt-get install -y zabbix-agent
 
 
 
-ENTRYPOINT service apache2 start; service mysql start; service zabbix-server start && bash
+ENTRYPOINT service apache2 start; service mysql start; service zabbix-server start; service zabbix-agent restart && bash
 
 
 
